@@ -80,7 +80,67 @@
   (sinh [x] (Math/sinh x))
   (cosh [x] (Math/cosh x))
 
-  Number
+  Integer
+  (exp [x] (Math/exp x))
+  (sqrt [x] (Math/sqrt x))
+  (log [x] (Math/log x))
+  (sin [x] (Math/sin x))
+  (cos [x] (Math/cos x))
+  (asin [x] (Math/asin x))
+  (atan [x] (Math/atan x))
+  (acos [x] (Math/acos x))
+  (sinh [x] (Math/sinh x))
+  (cosh [x] (Math/cosh x))
+  
+  Long
+  (exp [x] (Math/exp x))
+  (sqrt [x] (Math/sqrt x))
+  (log [x] (Math/log x))
+  (sin [x] (Math/sin x))
+  (cos [x] (Math/cos x))
+  (asin [x] (Math/asin x))
+  (atan [x] (Math/atan x))
+  (acos [x] (Math/acos x))
+  (sinh [x] (Math/sinh x))
+  (cosh [x] (Math/cosh x))
+
+  clojure.lang.BigInt
+  (exp [x] (Math/exp x))
+  (sqrt [x] (Math/sqrt x))
+  (log [x] (Math/log x))
+  (sin [x] (Math/sin x))
+  (cos [x] (Math/cos x))
+  (asin [x] (Math/asin x))
+  (atan [x] (Math/atan x))
+  (acos [x] (Math/acos x))
+  (sinh [x] (Math/sinh x))
+  (cosh [x] (Math/cosh x))
+
+  BigInteger
+  (exp [x] (Math/exp x))
+  (sqrt [x] (Math/sqrt x))
+  (log [x] (Math/log x))
+  (sin [x] (Math/sin x))
+  (cos [x] (Math/cos x))
+  (asin [x] (Math/asin x))
+  (atan [x] (Math/atan x))
+  (acos [x] (Math/acos x))
+  (sinh [x] (Math/sinh x))
+  (cosh [x] (Math/cosh x))
+
+  Short
+  (exp [x] (Math/exp x))
+  (sqrt [x] (Math/sqrt x))
+  (log [x] (Math/log x))
+  (sin [x] (Math/sin x))
+  (cos [x] (Math/cos x))
+  (asin [x] (Math/asin x))
+  (atan [x] (Math/atan x))
+  (acos [x] (Math/acos x))
+  (sinh [x] (Math/sinh x))
+  (cosh [x] (Math/cosh x))
+
+  Byte
   (exp [x] (Math/exp x))
   (sqrt [x] (Math/sqrt x))
   (log [x] (Math/log x))
@@ -91,3 +151,40 @@
   (acos [x] (Math/acos x))
   (sinh [x] (Math/sinh x))
   (cosh [x] (Math/cosh x)))
+
+(extend-protocol RealFrac
+  Float
+  (proper-fraction [x]
+    [x 0.0])
+  
+  Double
+  (proper-fraction [x]
+    [x 0.0])
+
+  clojure.lang.Ratio
+  (proper-fraction [x]
+    [x 0.0])
+
+  Integer
+  (proper-fraction [x]
+    [x 0.0])
+  
+  Long
+  (proper-fraction [x]
+    [x 0.0])
+
+  clojure.lang.BigInt
+  (proper-fraction [x]
+    [x 0.0])
+
+  BigInteger
+  (proper-fraction [x]
+    [x 0.0])
+
+  Short
+  (proper-fraction [x]
+    [x 0.0])
+
+  Byte
+  (proper-fraction [x]
+    [x 0.0]))
