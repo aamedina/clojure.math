@@ -90,6 +90,14 @@
       a
       (recur b (rem a b)))))
 
+(defn square
+  [x]
+  (* x x))
+
+(defn cube
+  [x]
+  (* x x x))
+
 (defn lcm
   [x y]
   (if (or (zero? x) (zero? y))

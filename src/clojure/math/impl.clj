@@ -150,6 +150,18 @@
   (atan [x] (Math/atan x))
   (acos [x] (Math/acos x))
   (sinh [x] (Math/sinh x))
+  (cosh [x] (Math/cosh x))
+
+  BigDecimal
+  (exp [x] (Math/exp x))
+  (sqrt [x] (Math/sqrt x))
+  (log [x] (Math/log x))
+  (sin [x] (Math/sin x))
+  (cos [x] (Math/cos x))
+  (asin [x] (Math/asin x))
+  (atan [x] (Math/atan x))
+  (acos [x] (Math/acos x))
+  (sinh [x] (Math/sinh x))
   (cosh [x] (Math/cosh x)))
 
 (extend-protocol RealFrac
