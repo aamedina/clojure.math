@@ -1,5 +1,5 @@
 (ns clojure.math.numeric-tower
-  (:refer-clojure :exclude [+ * / - rationalize int integer? even? odd?
+  (:refer-clojure :exclude [+ * / - rationalize integer? even? odd?
                             quot rem mod])
   (:import (org.apache.commons.math3.complex Complex)))
 
@@ -104,7 +104,32 @@
 
 (defn expt
   [z w]
-  (apply clojure.core/* (repeat w z)))
+  (reduce * (repeat w z)))
+
+(defn truncate
+  [x]
+  (first (proper-fraction x)))
+
+(defn round
+  [x]
+  (let [[integral fractional] (proper-fraction x)]
+    (if (>= 0.5 (- 1.0 fractional))
+      (inc integral)
+      integral)))
+
+(defn ceiling
+  [x]
+  (let [[integral fractional] (proper-fraction x)]
+    (if (or (zero? fractional) (neg? integral))
+      integral
+      (inc integral))))
+
+(defn floor
+  [x]
+  (let [[integral fractional] (proper-fraction x)]
+    (if (or (zero? fractional) (pos? integral))
+      integral
+      (dec integral))))
 
 (defn complex?
   [x]

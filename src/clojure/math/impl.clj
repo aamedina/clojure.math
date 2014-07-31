@@ -1,5 +1,5 @@
 (ns clojure.math.impl
-  (:refer-clojure :exclude [+ * / - rationalize int integer? even? odd?
+  (:refer-clojure :exclude [+ * / - rationalize integer? even? odd?
                             quot rem mod])
   (:require [clojure.math.numeric-tower :refer :all])
   (:import (org.apache.commons.math3.complex Complex))
@@ -155,12 +155,12 @@
 (extend-protocol RealFrac
   Float
   (proper-fraction [x]
-    (let [q (bigint x)]
+    (let [q (int x)]
       [q (- x q)]))
   
   Double
   (proper-fraction [x]
-    (let [q (bigint x)]
+    (let [q (long x)]
       [q (- x q)]))
 
   clojure.lang.Ratio
@@ -169,20 +169,7 @@
           [q r] (quot-rem numerator denominator)]
       [q (/ r denominator)]))
 
-  Integer
-  (proper-fraction [x] [x 0])
-  
-  Long
-  (proper-fraction [x] [x 0])
-
-  clojure.lang.BigInt
-  (proper-fraction [x] [x 0])
-
-  BigInteger
-  (proper-fraction [x] [x 0])
-  
-  Short
-  (proper-fraction [x] [x 0])
-
-  Byte
-  (proper-fraction [x] [x 0]))
+  java.math.BigDecimal
+  (proper-fraction [x]
+    (let [q (bigint x)]
+      [q (- x q)])))
