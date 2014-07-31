@@ -148,6 +148,19 @@
           [mantissa _] (decode-float x)]
       (encode-float x mantissa (- (float-digits x))))))
 
+(defn atan2
+  [y x]
+  (cond
+    (pos? x) (atan (/ y x))
+    (and (zero? x) (pos? y)) (/ pi 2)
+    (and (neg? x) (pos? y)) (+ pi (atan (/ y x)))
+    (or (and (<= x 0) (pos? y))
+        (and (negative-zero? x) (negative-zero? y)))
+    (- (atan2 (- y) x))
+    (and (zero? y) (or (neg? x) (negative-zero? x))) pi
+    (and (zero? x) (zero? y)) y
+    :else (+ x y)))
+
 (defn complex?
   [x]
   (instance? Complex x))

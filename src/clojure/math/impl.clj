@@ -220,3 +220,4 @@
   (negative-zero? [x]
     (and (zero? x) (not (.equals 0.0 (double x)))))
   (ieee? [x] true))
+
