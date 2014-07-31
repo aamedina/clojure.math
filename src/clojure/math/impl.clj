@@ -174,16 +174,6 @@
     (let [q (bigint x)]
       [q (- x q)])))
 
-(defn floating
-  [x]
-  (let [bits (Double/doubleToLongBits x)
-        sign (if (zero? (bit-shift-right bits 31)) 1 -1)
-        exponent (bit-and (bit-shift-right bits 23) 0xff)
-        mantissa (if (zero? exponent)
-                   (bit-shift-left (bit-and bits 0x7fffff) 1)
-                   (bit-or (bit-and bits 0x7fffff) 0x800000))]
-    mantissa))
-
 (extend-protocol RealFloat
   Float
   (float-radix [x] 2)
