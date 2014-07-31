@@ -42,6 +42,7 @@
   (float-digits [x])
   (float-range [x])
   (decode-float [x])
+  (encode-float [x significand exponent])
   (nan? [x])
   (infinite? [x])
   (denormalized? [x])
@@ -103,7 +104,10 @@
 
 (defn expt
   [z w]
-  (reduce * (repeat w z)))
+  (cond
+    (pos? w) (reduce * (repeat w z))
+    (neg? w) (/ 1 (reduce * (repeat (- w) z)))
+    (zero? w) 1))
 
 (defn truncate
   [x]
@@ -129,6 +133,20 @@
     (if (or (zero? fractional) (pos? integral))
       integral
       (dec integral))))
+
+(defn exponent
+  [x]
+  (if (zero? x)
+    0
+    (+ (float-digits x) (second (decode-float x)))))
+
+(defn significand
+  [x]
+  (if (zero? x)
+    0.0
+    (let [[min max radix] (conj (float-range x) (float-radix x))
+          [mantissa _] (decode-float x)]
+      (encode-float x mantissa (- (float-digits x))))))
 
 (defn complex?
   [x]
@@ -168,3 +186,4 @@
 (defmethod print-method Complex
   [^Complex x ^java.io.Writer writer]
   (.write writer (str (real-part x) "+" (imag-part x) "i")))
+
