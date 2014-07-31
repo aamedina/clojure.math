@@ -6,16 +6,34 @@
 
 (extend-protocol Num
   Number
-  (add [x y] (. clojure.lang.Numbers (add x y)))
-  (multiply [x y] (. clojure.lang.Numbers (multiply x y)))
-  (subtract [x y] (. clojure.lang.Numbers (minus x y)))
+  (add [x y]
+    (if (instance? Number y)
+      (. clojure.lang.Numbers (add x y))
+      (add y x)))
+  (multiply [x y]
+    (if (instance? Number y)
+      (. clojure.lang.Numbers (multiply x y))
+      (multiply y x)))
+  (subtract [x y]
+    (if (instance? Number y)
+      (. clojure.lang.Numbers (minus x y))
+      (add (.negate y) x)))
   (abs [x] (Math/abs x))
   (signum [x] (Math/signum x))
 
   org.apache.commons.math3.complex.Complex
-  (add [x y] (.add x y))
-  (multiply [x y] (.multiply x y))
-  (subtract [x y] (.subtract x y))
+  (add [x y]
+    (if (complex? y)
+      (.add x y)
+      (.add x (double y))))
+  (multiply [x y]
+    (if (complex? y)
+      (.multiply x y)
+      (.multiply x (double y))))
+  (subtract [x y]
+    (if (complex? y)
+      (.subtract x y)
+      (.subtract x (double y))))
   (abs [x] (.abs x))
   (signum [x] (Math/signum (real-part x))))
 
@@ -246,3 +264,16 @@
 (defmethod print-method org.apache.commons.math3.complex.Complex
   [^org.apache.commons.math3.complex.Complex x ^java.io.Writer writer]
   (.write writer (str (real-part x) "+" (imag-part x) "i")))
+
+(alter-var-root #'*complex-number-type*
+                (constantly org.apache.commons.math3.complex.Complex))
+
+(alter-var-root #'i (constantly org.apache.commons.math3.complex.Complex/I))
+
+(defmethod make-rectangular org.apache.commons.math3.complex.Complex
+  [x y]
+  (org.apache.commons.math3.complex.Complex. x y))
+
+(defmethod make-polar org.apache.commons.math3.complex.Complex
+  [magnitude angle]
+  (+ (* magnitude (cos angle)) (* magnitude (sin angle) i)))

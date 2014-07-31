@@ -5,6 +5,7 @@
 
 (def ^:const e Math/E)
 (def ^:const pi Math/PI)
+(def ^:dynamic i)
 
 (defprotocol Num
   (add [x y])
@@ -187,10 +188,7 @@
   [x]
   (satisfies? Complex x))
 
-(defn make-rectangular
-  [x y]
-  (org.apache.commons.math3.complex.Complex. x y))
+(def ^:dynamic *complex-number-type* nil)
 
-(defn make-polar
-  [magnitude angle]
-  )
+(defmulti make-rectangular (fn [x y] *complex-number-type*))
+(defmulti make-polar (fn [magnitude angle] *complex-number-type*))
