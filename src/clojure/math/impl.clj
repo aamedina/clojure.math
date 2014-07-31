@@ -73,113 +73,51 @@
   (quot-rem [x y] (quot-rem* x y)))
 
 (extend-protocol Floating
-  Float
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
+  Number
+  (exp [x]
+    (Math/exp x))
+  (sqrt [x]
+    (if (pos? x)
+      (Math/sqrt x)
+      (sqrt (make-rectangular x 0))))
+  (log [x]
+    (Math/log x))
+  (sin [x]
+    (Math/sin x))
+  (cos [x]
+    (Math/cos x))
+  (asin [x]
+    (Math/asin x))
+  (atan [x]
+    (Math/atan x))
+  (acos [x]
+    (Math/acos x))
+  (sinh [x]
+    (Math/sinh x))
+  (cosh [x]
+    (Math/cosh x))
 
-  Double
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-
-  Integer
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-  
-  Long
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-
-  clojure.lang.BigInt
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-
-  BigInteger
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-
-  Short
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-
-  Byte
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x))
-
-  BigDecimal
-  (exp [x] (Math/exp x))
-  (sqrt [x] (Math/sqrt x))
-  (log [x] (Math/log x))
-  (sin [x] (Math/sin x))
-  (cos [x] (Math/cos x))
-  (asin [x] (Math/asin x))
-  (atan [x] (Math/atan x))
-  (acos [x] (Math/acos x))
-  (sinh [x] (Math/sinh x))
-  (cosh [x] (Math/cosh x)))
+  org.apache.commons.math3.complex.Complex
+  (exp [x]
+    (.exp x))
+  (sqrt [x]
+    (.sqrt x))
+  (log [x]
+    (.log x))
+  (sin [x]
+    (.sin x))
+  (cos [x]
+    (.cos x))
+  (asin [x]
+    (.asin x))
+  (atan [x]
+    (.atan x))
+  (acos [x]
+    (.acos x))
+  (sinh [x]
+    (.sinh x))
+  (cosh [x]
+    (.cosh x)))
 
 (extend-protocol RealFrac
   Float
