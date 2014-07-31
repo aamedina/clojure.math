@@ -197,11 +197,7 @@
   (imag-part [^org.apache.commons.math3.complex.Complex z]
     (.getImaginary z))
   (magnitude [z]
-    (let [[x y] [(.getReal z) (.getImaginary z)]
-          k (max (exponent x) (exponent y))
-          mk (- k)]
-      (->> (sqrt (+ (square (scale-float mk x)) (square (scale-float mk y))))
-           (scale-float k))))
+    (.abs z))
   (angle [z]
     (.getArgument z))
   (conjugate [z]
