@@ -3,6 +3,8 @@
                             quot rem mod])
   (:require [clojure.tools.namespace.repl :refer [refresh-all]]))
 
+(def ^:dynamic *complex-number-type*)
+
 (def ^:const e Math/E)
 (def ^:const pi Math/PI)
 (def ^:dynamic i)
@@ -188,7 +190,8 @@
   [x]
   (satisfies? Complex x))
 
-(def ^:dynamic *complex-number-type* nil)
-
 (defmulti make-rectangular (fn [x y] *complex-number-type*))
-(defmulti make-polar (fn [magnitude angle] *complex-number-type*))
+
+(defn make-polar
+  [magnitude angle]
+  (+ (* magnitude (cos angle)) (* magnitude (sin angle) i)))

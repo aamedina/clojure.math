@@ -273,7 +273,3 @@
 (defmethod make-rectangular org.apache.commons.math3.complex.Complex
   [x y]
   (org.apache.commons.math3.complex.Complex. x y))
-
-(defmethod make-polar org.apache.commons.math3.complex.Complex
-  [magnitude angle]
-  (+ (* magnitude (cos angle)) (* magnitude (sin angle) i)))
