@@ -155,36 +155,34 @@
 (extend-protocol RealFrac
   Float
   (proper-fraction [x]
-    [x 0.0])
+    (let [q (bigint x)]
+      [q (- x q)]))
   
   Double
   (proper-fraction [x]
-    [x 0.0])
+    (let [q (bigint x)]
+      [q (- x q)]))
 
   clojure.lang.Ratio
   (proper-fraction [x]
-    [x 0.0])
+    (let [[numerator denominator] [(.-numerator x) (.-denominator x)]
+          [q r] (quot-rem numerator denominator)]
+      [q (/ r denominator)]))
 
   Integer
-  (proper-fraction [x]
-    [x 0.0])
+  (proper-fraction [x] [x 0])
   
   Long
-  (proper-fraction [x]
-    [x 0.0])
+  (proper-fraction [x] [x 0])
 
   clojure.lang.BigInt
-  (proper-fraction [x]
-    [x 0.0])
+  (proper-fraction [x] [x 0])
 
   BigInteger
-  (proper-fraction [x]
-    [x 0.0])
-
+  (proper-fraction [x] [x 0])
+  
   Short
-  (proper-fraction [x]
-    [x 0.0])
+  (proper-fraction [x] [x 0])
 
   Byte
-  (proper-fraction [x]
-    [x 0.0]))
+  (proper-fraction [x] [x 0]))
