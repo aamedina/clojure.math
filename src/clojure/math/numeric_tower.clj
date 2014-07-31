@@ -187,6 +187,20 @@
     (and (zero? x) (zero? y)) y
     :else (+ x y)))
 
+(defn clamp
+  [bd k]
+  (max (- bd) (min bd k)))
+
+(defn scale-float
+  [k x]
+  (if (or (zero? k) (zero? x) (nan? x) (infinite? x))
+    x
+    (let [[m n] (decode-float x)
+          [l h] (float-range x)
+          d (float-digits x)
+          b (+ (dec h) (* 4 d))]
+      (encode-float x m (+ n (clamp b k))))))
+
 (defn complex?
   [x]
   (satisfies? Complex x))

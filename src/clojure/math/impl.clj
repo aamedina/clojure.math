@@ -4,6 +4,8 @@
   (:require [clojure.math.numeric-tower :refer :all])
   (:alias core clojure.core))
 
+(set! *warn-on-reflection* true)
+
 (extend-protocol Num
   Number
   (add [x y]
@@ -17,25 +19,25 @@
   (subtract [x y]
     (if (instance? Number y)
       (. clojure.lang.Numbers (minus x y))
-      (add (.negate y) x)))
-  (abs [x] (Math/abs x))
-  (signum [x] (Math/signum x))
+      (add (.negate ^org.apache.commons.math3.complex.Complex y) x)))
+  (abs [x] (Math/abs ^double x))
+  (signum [x] (Math/signum ^double x))
 
   org.apache.commons.math3.complex.Complex
   (add [x y]
     (if (complex? y)
-      (.add x y)
+      (.add x ^org.apache.commons.math3.complex.Complex y)
       (.add x (double y))))
   (multiply [x y]
     (if (complex? y)
-      (.multiply x y)
+      (.multiply x ^org.apache.commons.math3.complex.Complex y)
       (.multiply x (double y))))
   (subtract [x y]
     (if (complex? y)
-      (.subtract x y)
+      (.subtract x ^org.apache.commons.math3.complex.Complex y)
       (.subtract x (double y))))
   (abs [x] (.abs x))
-  (signum [x] (Math/signum (real-part x))))
+  (signum [x] (Math/signum ^double (real-part x))))
 
 (extend-protocol Real
   Number
@@ -162,7 +164,7 @@
     (and (or (pos? x) (neg? x))
          (== (Math/getExponent x) (dec Float/MIN_EXPONENT))))
   (negative-zero? [x]
-    (and (zero? x) (not (.equals (float 0.0) (float x)))))
+    (and (zero? x) (not (.equals ^Float (float 0.0) ^Float (float x)))))
   (ieee? [x] true)
   
   Double
@@ -185,17 +187,21 @@
     (and (or (pos? x) (neg? x))
          (== (Math/getExponent x) (dec Double/MIN_EXPONENT))))
   (negative-zero? [x]
-    (and (zero? x) (not (.equals 0.0 (double x)))))
+    (and (zero? x) (not (.equals ^Double (double 0.0) ^Double (double x)))))
   (ieee? [x] true))
 
 (extend-protocol Complex
   org.apache.commons.math3.complex.Complex
-  (real-part [z]
+  (real-part [^org.apache.commons.math3.complex.Complex z]
     (.getReal z))
-  (imag-part [z]
+  (imag-part [^org.apache.commons.math3.complex.Complex z]
     (.getImaginary z))
   (magnitude [z]
-    (.magnitude z))
+    (let [[x y] [(.getReal z) (.getImaginary z)]
+          k (max (exponent x) (exponent y))
+          mk (- k)]
+      (->> (sqrt (+ (square (scale-float mk x)) (square (scale-float mk y))))
+           (scale-float k))))
   (angle [z]
     (.getArgument z))
   (conjugate [z]
