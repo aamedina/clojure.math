@@ -197,11 +197,14 @@
   (magnitude [z]
     (.magnitude z))
   (angle [z]
-    (.getArgument z)))
+    (.getArgument z))
+  (conjugate [z]
+    (.conjugate z)))
 
 (defmethod print-method org.apache.commons.math3.complex.Complex
   [^org.apache.commons.math3.complex.Complex x ^java.io.Writer writer]
-  (.write writer (str (real-part x) "+" (imag-part x) "i")))
+  (let [[real imag] ((juxt real-part imag-part) x)]
+    (.write writer (str real (when (pos? imag) "+") imag "i"))))
 
 (alter-var-root #'*complex-number-type*
                 (constantly org.apache.commons.math3.complex.Complex))

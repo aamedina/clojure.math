@@ -56,7 +56,8 @@
   (real-part [z])
   (imag-part [z])
   (magnitude [z])
-  (angle [z]))
+  (angle [z])
+  (conjugate [z]))
 
 (defn +
   ([] 0)
