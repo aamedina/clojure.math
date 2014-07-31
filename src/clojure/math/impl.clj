@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [+ * / - rationalize integer? even? odd?
                             quot rem mod])
   (:require [clojure.math.numeric-tower :refer :all])
-  (:import (org.apache.commons.math3.complex Complex))
   (:alias core clojure.core))
 
 (extend-protocol Num
@@ -13,7 +12,7 @@
   (abs [x] (Math/abs x))
   (signum [x] (Math/signum x))
 
-  Complex
+  org.apache.commons.math3.complex.Complex
   (add [x y] (.add x y))
   (multiply [x y] (.multiply x y))
   (subtract [x y] (.subtract x y))
@@ -233,3 +232,17 @@
     (and (zero? x) (not (.equals 0.0 (double x)))))
   (ieee? [x] true))
 
+(extend-protocol Complex
+  org.apache.commons.math3.complex.Complex
+  (real-part [z]
+    (.getReal z))
+  (imag-part [z]
+    (.getImaginary z))
+  (magnitude [z]
+    (.magnitude z))
+  (angle [z]
+    (.getArgument z)))
+
+(defmethod print-method org.apache.commons.math3.complex.Complex
+  [^org.apache.commons.math3.complex.Complex x ^java.io.Writer writer]
+  (.write writer (str (real-part x) "+" (imag-part x) "i")))

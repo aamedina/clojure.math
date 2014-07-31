@@ -1,7 +1,7 @@
 (ns clojure.math.numeric-tower
   (:refer-clojure :exclude [+ * / - rationalize integer? even? odd?
                             quot rem mod])
-  (:import (org.apache.commons.math3.complex Complex)))
+  (:require [clojure.tools.namespace.repl :refer [refresh-all]]))
 
 (def ^:const e Math/E)
 (def ^:const pi Math/PI)
@@ -48,6 +48,12 @@
   (denormalized? [x])
   (negative-zero? [x])
   (ieee? [x]))
+
+(defprotocol Complex
+  (real-part [z])
+  (imag-part [z])
+  (magnitude [z])
+  (angle [z]))
 
 (defn +
   ([] 0)
@@ -179,40 +185,12 @@
 
 (defn complex?
   [x]
-  (instance? Complex x))
+  (satisfies? Complex x))
 
 (defn make-rectangular
-  ([^double x]
-     (Complex. x))
-  ([^double x ^double y]
-     (Complex. x y)))
+  [x y]
+  (org.apache.commons.math3.complex.Complex. x y))
 
 (defn make-polar
-  [^double magnitude ^double angle]
-  ;; (+ (* magnitude (cos angle)) (* magnitude (sin angle) 0+1i))
+  [magnitude angle]
   )
-
-(defn real-part
-  [^Complex z]
-  (.getReal z))
-
-(defn imag-part
-  [^Complex z]
-  (.getImaginary z))
-
-(defn magnitude
-  [^Complex z]
-  )
-
-(defn angle
-  [^Complex z]
-  (.getArgument z))
-
-(defn conjugate
-  [^Complex z]
-  (.conjugate z))
-
-(defmethod print-method Complex
-  [^Complex x ^java.io.Writer writer]
-  (.write writer (str (real-part x) "+" (imag-part x) "i")))
-
