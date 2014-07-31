@@ -173,3 +173,54 @@
   (proper-fraction [x]
     (let [q (bigint x)]
       [q (- x q)])))
+
+(defn floating
+  [x]
+  (let [bits (Double/doubleToLongBits x)
+        sign (if (zero? (bit-shift-right bits 31)) 1 -1)
+        exponent (bit-and (bit-shift-right bits 23) 0xff)
+        mantissa (if (zero? exponent)
+                   (bit-shift-left (bit-and bits 0x7fffff) 1)
+                   (bit-or (bit-and bits 0x7fffff) 0x800000))]
+    mantissa))
+
+(extend-protocol RealFloat
+  Float
+  (float-radix [x] 2)
+  (float-digits [x] 24)
+  (float-range [x] [Float/MIN_VALUE Float/MAX_VALUE])
+  (decode-float [x]
+    (let [bits (Float/floatToIntBits x)
+          sign (if (zero? (bit-shift-right bits 31)) 1 -1)
+          exponent (bit-and (bit-shift-right bits 23) 0xff)
+          mantissa (if (zero? exponent)
+                     (bit-shift-left (bit-and bits 0x7fffff) 1)
+                     (bit-or (bit-and bits 0x7fffff) 0x800000))]
+      [mantissa exponent]))
+  (nan? [x] (.isNaN x))
+  (infinite? [x] (.isInfinite x))
+  (denormalized? [x]
+    (zero? (+ (Math/getExponent x) 127)))
+  (negative-zero? [x]
+    (and (zero? x) (not (.equals (float 0.0) (float x)))))
+  (ieee? [x] true)
+  
+  Double
+  (float-radix [x] 2)
+  (float-digits [x] 53)
+  (float-range [x] [Double/MIN_VALUE Double/MAX_VALUE])
+  (decode-float [x]
+    (let [bits (Double/doubleToLongBits x)
+          sign (if (zero? (bit-shift-right bits 63)) 1 -1)
+          exponent (int (bit-and (bit-shift-right bits 52) 0x7ff))
+          mantissa (if (zero? exponent)
+                     (bit-shift-left (bit-and bits 0xfffffffffffff) 1)
+                     (bit-or (bit-and bits 0xfffffffffffff) 0x10000000000000))]
+      [mantissa exponent]))
+  (nan? [x] (.isNaN x))
+  (infinite? [x] (.isInfinite x))
+  (denormalized? [x]
+    (zero? (+ (Math/getExponent x) 1023)))
+  (negative-zero? [x]
+    (and (zero? x) (not (.equals 0.0 (double x)))))
+  (ieee? [x] true))

@@ -42,7 +42,6 @@
   (float-digits [x])
   (float-range [x])
   (decode-float [x])
-  (encode-float [x])
   (nan? [x])
   (infinite? [x])
   (denormalized? [x])
