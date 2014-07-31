@@ -83,10 +83,18 @@
   [x y])
 
 (defn gcd
-  [x y])
+  [x y]
+  (loop [a (abs x)
+         b (abs y)]
+    (if (zero? b)
+      a
+      (recur b (rem a b)))))
 
 (defn lcm
-  [x y])
+  [x y]
+  (if (or (zero? x) (zero? y))
+    0
+    (abs (* (quot x (gcd x y)) y))))
 
 (defn integer?
   [x]
