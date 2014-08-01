@@ -164,7 +164,7 @@
 (defn even?
   [n]
   (if (integer? n)
-    (zero? (clojure.core/bit-and (clojure.lang.RT/uncheckedLongCast n) 1))
+    (zero? (bit-and (unchecked-long n) 1))
     (throw (IllegalArgumentException. (str "Argument must be integral: " n)))))
 
 (defn odd?
@@ -231,8 +231,8 @@
     :else (+ x y)))
 
 (defn clamp
-  [bd k]
-  (max (- bd) (min bd k)))
+  [x y]
+  (max (- x) (min x y)))
 
 (defn scale-float
   [k x]
