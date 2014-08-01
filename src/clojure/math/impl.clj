@@ -8,6 +8,12 @@
 
 (set! *warn-on-reflection* true)
 
+(alter-var-root #'e (constantly Math/E))
+(alter-var-root #'pi (constantly Math/PI))
+(->> (constantly org.apache.commons.math3.complex.Complex)
+     (alter-var-root #'*complex-number-type* ))
+(alter-var-root #'i (constantly org.apache.commons.math3.complex.Complex/I))
+
 (extend-protocol Num
   Number
   (add [x y]
@@ -210,11 +216,6 @@
   [^org.apache.commons.math3.complex.Complex x ^java.io.Writer writer]
   (let [[real imag] ((juxt real-part imag-part) x)]
     (.write writer (str real (when (pos? imag) "+") imag "i"))))
-
-(alter-var-root #'*complex-number-type*
-                (constantly org.apache.commons.math3.complex.Complex))
-
-(alter-var-root #'i (constantly org.apache.commons.math3.complex.Complex/I))
 
 (defmethod make-rectangular org.apache.commons.math3.complex.Complex
   [x y]

@@ -6,9 +6,8 @@
   (:require [clojure.tools.namespace.repl :refer [refresh-all]]))
 
 (def ^:dynamic *complex-number-type*)
-
-(def ^:const e Math/E)
-(def ^:const pi Math/PI)
+(def ^:dynamic e)
+(def ^:dynamic pi)
 (def ^:dynamic i)
 
 (defprotocol Num
