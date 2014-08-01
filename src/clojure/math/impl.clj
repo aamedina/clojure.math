@@ -1,6 +1,8 @@
 (ns clojure.math.impl
   (:refer-clojure :exclude [+ * / - rationalize integer? even? odd?
-                            quot rem mod])
+                            quot rem mod bit-and bit-or bit-xor bit-not
+                            bit-shift-left bit-shift-right bit-set bit-clear
+                            bit-test bit-flip bit-and-not])
   (:require [clojure.math.numeric-tower :refer :all])
   (:alias core clojure.core))
 
@@ -150,11 +152,11 @@
   (float-range [x] [Float/MIN_VALUE Float/MAX_VALUE])
   (decode-float [x]
     (let [bits (Float/floatToIntBits x)
-          sign (if (zero? (bit-shift-right bits 31)) 1 -1)
-          exponent (bit-and (bit-shift-right bits 23) 0xff)
+          sign (if (zero? (core/bit-shift-right bits 31)) 1 -1)
+          exponent (core/bit-and (core/bit-shift-right bits 23) 0xff)
           mantissa (if (zero? exponent)
-                     (bit-shift-left (bit-and bits 0x7fffff) 1)
-                     (bit-or (bit-and bits 0x7fffff) 0x800000))]
+                     (core/bit-shift-left (core/bit-and bits 0x7fffff) 1)
+                     (core/bit-or (core/bit-and bits 0x7fffff) 0x800000))]
       [(* mantissa sign) (- (Math/getExponent x) 23)]))
   (encode-float [_ significand exponent]
     (float (* significand (expt 2 exponent))))
@@ -173,11 +175,12 @@
   (float-range [x] [Double/MIN_VALUE Double/MAX_VALUE])
   (decode-float [x]
     (let [bits (Double/doubleToLongBits x)
-          sign (if (zero? (bit-shift-right bits 63)) 1 -1)
-          exponent (int (bit-and (bit-shift-right bits 52) 0x7ff))
+          sign (if (zero? (core/bit-shift-right bits 63)) 1 -1)
+          exponent (int (core/bit-and (core/bit-shift-right bits 52) 0x7ff))
           mantissa (if (zero? exponent)
-                     (bit-shift-left (bit-and bits 0xfffffffffffff) 1)
-                     (bit-or (bit-and bits 0xfffffffffffff) 0x10000000000000))]
+                     (core/bit-shift-left (core/bit-and bits 0xfffffffffffff) 1)
+                     (core/bit-or (core/bit-and bits 0xfffffffffffff)
+                                  0x10000000000000))]
       [(* mantissa sign) (- (Math/getExponent x) 52)]))
   (encode-float [_ significand exponent]
     (double (* significand (expt 2 exponent))))
@@ -216,3 +219,158 @@
 (defmethod make-rectangular org.apache.commons.math3.complex.Complex
   [x y]
   (org.apache.commons.math3.complex.Complex. x y))
+
+(extend-protocol Bitwise
+  Byte
+  (-bit-and [x y]
+    (. clojure.lang.Numbers and x y))
+  (-bit-or [x y]
+    (. clojure.lang.Numbers or x y))
+  (-bit-xor [x y]
+    (. clojure.lang.Numbers xor x y))
+  (bit-not [x]
+    (. clojure.lang.Numbers not x))
+  (bit-clear [x n]
+    (. clojure.lang.Numbers clearBit x n))
+  (bit-set [x n]
+    (. clojure.lang.Numbers setBit x n))
+  (bit-flip [x n]
+    (. clojure.lang.Numbers flipBit x n))
+  (bit-shift-left [x n]
+    (. clojure.lang.Numbers shiftLeft x n))
+  (bit-shift-right [x n]
+    (. clojure.lang.Numbers shiftRight x n))
+  (bit-rotate-left [x n])
+  (bit-rotate-right [x n])
+  (bit-test [x n]
+    (. clojure.lang.Numbers testBit x n))
+  (signed? [x] true)
+  (bit-size [x] Byte/SIZE)
+
+  Short
+  (-bit-and [x y]
+    (. clojure.lang.Numbers and x y))
+  (-bit-or [x y]
+    (. clojure.lang.Numbers or x y))
+  (-bit-xor [x y]
+    (. clojure.lang.Numbers xor x y))
+  (bit-not [x]
+    (. clojure.lang.Numbers not x))
+  (bit-clear [x n]
+    (. clojure.lang.Numbers clearBit x n))
+  (bit-set [x n]
+    (. clojure.lang.Numbers setBit x n))
+  (bit-flip [x n]
+    (. clojure.lang.Numbers flipBit x n))
+  (bit-shift-left [x n]
+    (. clojure.lang.Numbers shiftLeft x n))
+  (bit-shift-right [x n]
+    (. clojure.lang.Numbers shiftRight x n))
+  (bit-rotate-left [x n])
+  (bit-rotate-right [x n])
+  (bit-test [x n]
+    (. clojure.lang.Numbers testBit x n))
+  (signed? [x] true)
+  (bit-size [x] Short/SIZE)
+
+  Integer
+  (-bit-and [x y]
+    (. clojure.lang.Numbers and x y))
+  (-bit-or [x y]
+    (. clojure.lang.Numbers or x y))
+  (-bit-xor [x y]
+    (. clojure.lang.Numbers xor x y))
+  (bit-not [x]
+    (. clojure.lang.Numbers not x))
+  (bit-clear [x n]
+    (. clojure.lang.Numbers clearBit x n))
+  (bit-set [x n]
+    (. clojure.lang.Numbers setBit x n))
+  (bit-flip [x n]
+    (. clojure.lang.Numbers flipBit x n))
+  (bit-shift-left [x n]
+    (. clojure.lang.Numbers shiftLeft x n))
+  (bit-shift-right [x n]
+    (. clojure.lang.Numbers shiftRight x n))
+  (bit-rotate-left [x n])
+  (bit-rotate-right [x n])
+  (bit-test [x n]
+    (. clojure.lang.Numbers testBit x n))
+  (signed? [x] true)
+  (bit-size [x] Integer/SIZE)
+
+  Long
+  (-bit-and [x y]
+    (. clojure.lang.Numbers and x y))
+  (-bit-or [x y]
+    (. clojure.lang.Numbers or x y))
+  (-bit-xor [x y]
+    (. clojure.lang.Numbers xor x y))
+  (bit-not [x]
+    (. clojure.lang.Numbers not x))
+  (bit-clear [x n]
+    (. clojure.lang.Numbers clearBit x n))
+  (bit-set [x n]
+    (. clojure.lang.Numbers setBit x n))
+  (bit-flip [x n]
+    (. clojure.lang.Numbers flipBit x n))
+  (bit-shift-left [x n]
+    (. clojure.lang.Numbers shiftLeft x n))
+  (bit-shift-right [x n]
+    (. clojure.lang.Numbers shiftRight x n))
+  (bit-rotate-left [x n])
+  (bit-rotate-right [x n])
+  (bit-test [x n]
+    (. clojure.lang.Numbers testBit x n))
+  (signed? [x] true)
+  (bit-size [x] Long/SIZE)
+
+  BigInteger
+  (-bit-and [x y]
+    (. clojure.lang.Numbers and x y))
+  (-bit-or [x y]
+    (. clojure.lang.Numbers or x y))
+  (-bit-xor [x y]
+    (. clojure.lang.Numbers xor x y))
+  (bit-not [x]
+    (. clojure.lang.Numbers not x))
+  (bit-clear [x n]
+    (. clojure.lang.Numbers clearBit x n))
+  (bit-set [x n]
+    (. clojure.lang.Numbers setBit x n))
+  (bit-flip [x n]
+    (. clojure.lang.Numbers flipBit x n))
+  (bit-shift-left [x n]
+    (. clojure.lang.Numbers shiftLeft x n))
+  (bit-shift-right [x n]
+    (. clojure.lang.Numbers shiftRight x n))
+  (bit-rotate-left [x n])
+  (bit-rotate-right [x n])
+  (bit-test [x n]
+    (. clojure.lang.Numbers testBit x n))
+  (signed? [x] true)
+  (bit-size [x] (.bitLength x))
+
+  clojure.lang.BigInt
+  (-bit-and [x y]
+    (. clojure.lang.Numbers and x y))
+  (-bit-or [x y]
+    (. clojure.lang.Numbers or x y))
+  (-bit-xor [x y]
+    (. clojure.lang.Numbers xor x y))
+  (bit-not [x]
+    (. clojure.lang.Numbers not x))
+  (bit-clear [x n]
+    (. clojure.lang.Numbers clearBit x n))
+  (bit-set [x n]
+    (. clojure.lang.Numbers setBit x n))
+  (bit-flip [x n]
+    (. clojure.lang.Numbers flipBit x n))
+  (bit-shift-left [x n]
+    (. clojure.lang.Numbers shiftLeft x n))
+  (bit-shift-right [x n]
+    (. clojure.lang.Numbers shiftRight x n))
+  (bit-test [x n]
+    (. clojure.lang.Numbers testBit x n))
+  (signed? [x] true)
+  (bit-size [x] (.bitLength x)))

@@ -1,6 +1,8 @@
 (ns clojure.math.numeric-tower
   (:refer-clojure :exclude [+ * / - rationalize integer? even? odd?
-                            quot rem mod])
+                            quot rem mod bit-and bit-or bit-xor bit-not
+                            bit-shift-left bit-shift-right bit-set bit-clear
+                            bit-test bit-flip bit-and-not])
   (:require [clojure.tools.namespace.repl :refer [refresh-all]]))
 
 (def ^:dynamic *complex-number-type*)
@@ -59,6 +61,20 @@
   (angle [z])
   (conjugate [z]))
 
+(defprotocol Bitwise
+  (-bit-and [x y])
+  (-bit-or [x y])
+  (-bit-xor [x y])
+  (bit-not [x])
+  (bit-clear [x n])
+  (bit-set [x n])
+  (bit-flip [x n])
+  (bit-shift-left [x n])
+  (bit-shift-right [x n])
+  (bit-test [x n])
+  (bit-size [x])
+  (signed? [x]))
+
 (defn +
   ([] 0)
   ([x] {:pre [(satisfies? Num x)]} x)
@@ -81,6 +97,21 @@
   ([x y] (subtract x y))
   ([x y & more] (reduce subtract (subtract x y) more)))
 
+(defn bit-and
+  ([x y] (-bit-and x y))
+  ([x y & more]
+     (reduce bit-and (bit-and x y) more)))
+
+(defn bit-or
+  ([x y] (-bit-or x y))
+  ([x y & more]
+     (reduce bit-or (bit-or x y) more)))
+
+(defn bit-xor
+  ([x y] (-bit-xor x y))
+  ([x y & more]
+     (reduce bit-xor (bit-xor x y) more)))
+
 (defn quot
   [x y]
   (first (quot-rem x y)))
@@ -89,8 +120,20 @@
   [x y]
   (second (quot-rem x y)))
 
+(defn div-mod
+  [n d]
+  (let [[q r :as qr] (quot-rem n d)]
+    (if (== (signum r) (- (signum d)))
+      [(dec q) (+ r d)]
+      qr)))
+
+(defn div
+  [x y]
+  (first (div-mod x y)))
+
 (defn mod
-  [x y])
+  [x y]
+  (second (div-mod x y)))
 
 (defn gcd
   [x y]
@@ -121,7 +164,7 @@
 (defn even?
   [n]
   (if (integer? n)
-    (zero? (bit-and (clojure.lang.RT/uncheckedLongCast n) 1))
+    (zero? (clojure.core/bit-and (clojure.lang.RT/uncheckedLongCast n) 1))
     (throw (IllegalArgumentException. (str "Argument must be integral: " n)))))
 
 (defn odd?
